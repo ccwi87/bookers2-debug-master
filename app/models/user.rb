@@ -16,4 +16,6 @@ class User < ApplicationRecord
     self.favorites.exists?(book_id: book.id)
   end
 
+  has_many :book_comments, dependent: :destroy
+
 end
