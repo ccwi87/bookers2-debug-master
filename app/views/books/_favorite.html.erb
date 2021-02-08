@@ -1,0 +1,10 @@
+<% if Favorite.find_by(user_id: current_user.id, book_id: book.id) %>
+  <%= link_to "/books/#{book.id}/favorites", method: :delete, remote: true do %>
+    <i class="fas fa-heart" style="color: red;"></i>
+  <% end %>
+<% else %>
+  <%= link_to "/books/#{book.id}/favorites", method: :post, remote: true do %>
+    <i class="far fa-heart"></i>
+    <% end %>
+<% end %>
+<%= book.favorites.length %>

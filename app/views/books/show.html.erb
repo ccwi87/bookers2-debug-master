@@ -17,18 +17,8 @@
           </td>
           <td><%= link_to @book.title, book_path(@book) %></td>
           <td><%= @book.body %></td>
-          <td>
-            <% if current_user.already_favorited?(@book) %>
-              <%= link_to book_favorites_path(@book), method: :delete do %>
-                <i class="fas fa-heart" style="color: red;"></i>
-              <% end %>
-              <span style="color: red;"><%= @book.favorites.count %></span>
-            <% else %>
-              <%= link_to book_favorites_path(@book), method: :book do %>
-                <i class="far fa-heart"></i>
-              <% end %>
-              <%= @book.favorites.count %>
-            <% end %>
+          <td id="favorite-<%= @book.id %>">
+            <%= render partial: "books/favorite", locals: { book: @book } %>
           </td>
           <td>
             コメント数:<%= @book.book_comments.count %>
@@ -41,24 +31,11 @@
         </tr>
       </table>
 
-      <table>
-        <% @comments.each do |comment| %>
-        <tr>
-          <td><%= link_to user_path(@book.user) do %>
-            <%= attachment_image_tag(@user, :profile_image, :fill, 50, 50, fallback: "no-image-icon.jpg") %>
-            <%= comment.user.name %>
-            <% end %>
-          </td>
-          <td><%= comment.book_comment %></td>
-          <% if comment.user == current_user %>
-            <td><%= link_to "Destroy", book_book_comment_path(@book, comment), method: :delete, data: { confirm: '本当に消しますか？' }, class: "btn btn-sm btn-danger destroy_book_#{@book.id}"%></td>
-          <% end %>
-        </tr>
-      <% end %>
-    </table>
-
-      <%= form_for [@book, @comment] do |f| %>
-        <%= f.text_area :book_comment, size: "40x5" %>
+      <div id= "comments_area">
+        <%= render 'book_comments/table', user: @user, book: @book, comments: @comments %>
+      </div>
+      <%= form_with model:[@book, @comment] do |f| %>
+        <%= f.text_area :book_comment, size: "40x5", class: "book_comment_area" %>
         <%= f.submit '送信', class: "btn-sm btn-primary" %>
       <% end %>
 
